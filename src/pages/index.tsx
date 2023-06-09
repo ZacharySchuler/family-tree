@@ -6,6 +6,18 @@ import { api } from "~/utils/api";
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
+  const graph = api.graphRouter.getAllData.useQuery().data
+  const nodes = graph?.nodeList
+  const relationships = graph?.relationshipList
+
+
+
+
+  console.log("graphData")
+  console.log(graph)
+
+
+
   return (
     <>
       <Head>
@@ -45,6 +57,10 @@ const Home: NextPage = () => {
           <p className="text-2xl text-white">
             {hello.data ? hello.data.greeting : "Loading tRPC query..."}
           </p>
+          <div>
+            {nodes?.map((node) => (
+            <div key = {node.elementId}> {node.properties.name} </div>))}
+          </div>
         </div>
       </main>
     </>

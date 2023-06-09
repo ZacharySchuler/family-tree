@@ -40,3 +40,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+#Credential Folder
+/useful-files
+
+TODO.md

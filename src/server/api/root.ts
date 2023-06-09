@@ -1,4 +1,5 @@
 import { exampleRouter } from "~/server/api/routers/example";
+import { graphRouter } from "./routers/neo4j/readFromNeo4j";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -8,6 +9,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
+  graphRouter: graphRouter,
 });
 
 // export type definition of API
