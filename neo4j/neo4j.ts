@@ -12,6 +12,12 @@ type Relation = Relationship<Integer,{
     type: string;
 }>
 
+export interface FamilyRelationship{
+type: String,
+start: String,
+end: String
+
+}
 export interface Graph{
     nodeList: any[],
     relationshipList: any[]
@@ -26,7 +32,7 @@ interface Person{
 }
 
 
-export async function main(): Promise<Graph> {
+export async function fetchGraph(): Promise<Graph> {
     // Create a Driver Instance
     const driver = neo4j.driver(
       'neo4j+s://b3c4a146.databases.neo4j.io', //TODO: Move to secrets
@@ -38,14 +44,13 @@ export async function main(): Promise<Graph> {
   
     try {
       // Execute a Cypher statement in a Read Transaction
-      const nodesRes = await session.executeRead(tx => tx.run(`MATCH (n) RETURN n;`))
-      const relationRes = await session.executeRead(tx => tx.run(`MATCH (n) OPTIONAL MATCH (n)-[r]-() RETURN r;`))
-
+      const nodesRes = await session.executeRead(tx => tx.run(`MATCH (PersonNode) RETURN PersonNode;`))
     
-      const persons = await nodesRes.records.map(node => node.get('n'))
-      
+      const relationRes = await session.executeRead(tx => tx.run(`MATCH (n) OPTIONAL MATCH (n)-[relationship]-() RETURN relationship;`))
+    
+      const persons = await nodesRes.records.map(node => node.get('PersonNode'))
 
-      const rawRelationships = await relationRes.records.map(relation => relation.get('r'))
+      const rawRelationships = await relationRes.records.map(relation => relation.get('relationship'))
 
       const graph:Graph = {
         nodeList: persons,
@@ -65,13 +70,15 @@ export async function main(): Promise<Graph> {
     
   }
 
+
+
 export async function formatGraphData(){
 
-    const graph = await main()
+    const graph = await fetchGraph()
     const nodes = graph.nodeList
     const rawRelationship = graph.relationshipList
 
-    const relationships = await rawRelationship.map(relationship =>{
+    const relationships:FamilyRelationship[] = await rawRelationship.map(relationship =>{
         const start = findRelationshipStart(relationship, nodes);
         const end = findRelationshipEnd(relationship, nodes);
         return({
@@ -121,7 +128,7 @@ function findRelationshipStart(relation: any, listOfNodes: any[]): any{
     return name
   }
 
-  function isIdentityEqual(relationshipId,nodeId){
+  function isIdentityEqual(relationshipId: any, nodeId: any){
     if(relationshipId.low == nodeId.low && relationshipId.high == nodeId.high){
       return true
     }

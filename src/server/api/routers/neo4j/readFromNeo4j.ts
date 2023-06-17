@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import {main, Graph, formatGraphData} from "neo4j/neo4j"
+import {fetchGraph, Graph, formatGraphData} from "neo4j/neo4j"
 
 
 

@@ -2,16 +2,13 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
-import "dagre-d3";
-import { Digraph, digraph, Node, Subgraph, toDot } from "ts-graphviz";
 
-
+let nodeName: any
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const graph =  api.graphRouter.getAllData.useQuery().data
 
-  console.log(graph)
 
 
 
@@ -55,6 +52,7 @@ const Home: NextPage = () => {
         </tbody>
     </table>
     )
+    
 
 
   return (
@@ -67,9 +65,31 @@ const Home: NextPage = () => {
 <div>
   {relationshiptable()}
 </div>
+<div>____________________________________________________________________________________
+  </div>
 
+
+
+
+
+<input 
+placeholder = "Type your node's name"
+value ={nodeName}/>
+
+
+<button onClick = {PopUp(nodeName)}> Add Node</button>
     </>
   );
 };
+
+
+
+
+
+function PopUp(input:String): any{
+  //TODO: GET THIS TO WORK. CLONE THEOS REPO AND DO A SIDE BY SIDE TO HELP: https://github.com/t3dotgg/chirp/blob/main/src/pages/index.tsx
+  console.log('On Click')
+  console.log(input)
+}
 
 export default Home;
